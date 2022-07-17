@@ -1,0 +1,60 @@
+basePath: /api/v1
+definitions:
+  main.helloResponse:
+    properties:
+      message:
+        example: Hello world!
+        type: string
+    type: object
+  main.httpError:
+    properties:
+      code:
+        example: 400
+        type: integer
+      message:
+        example: status bad request
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: info@vediagames.com
+    name: Vedia Games
+    url: https://vediagames.com/contact
+  description: Lorem something lol. Just todo.
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  title: Onlooker Rest API
+  version: 0.1.0
+paths:
+  /hello:
+    get:
+      description: Hello World
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.helloResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.httpError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/main.httpError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/main.httpError'
+      summary: Hello World
+securityDefinitions:
+  ApiKeyAuth:
+    description: Token to access the API.
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

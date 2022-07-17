@@ -1,0 +1,6 @@
+.idea/
+.env
+.postgres-data/
+secret/
+.migrations/
+tmp/
