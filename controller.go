@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/vediagames/onlooker/level"
+	leveldomain "github.com/vediagames/onlooker/domain/level"
 )
 
 type Controller interface {
@@ -10,11 +10,11 @@ type Controller interface {
 }
 
 type controller struct {
-	levelService level.Service
+	levelService leveldomain.Service
 }
 
 type ControllerConfig struct {
-	LevelService level.Service
+	LevelService leveldomain.Service
 }
 
 func NewController(cfg ControllerConfig) Controller {
