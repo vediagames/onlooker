@@ -19,6 +19,7 @@ type CreateRequest struct {
 	SessionUUID string
 	Level       int
 	ClientTime  time.Time
+	Metadata    map[string]interface{}
 }
 
 func (r CreateRequest) Validate() error {
@@ -59,9 +60,8 @@ func (r CreateResponse) Validate() error {
 }
 
 type LogDeathRequest struct {
-	UUID          string
-	StopwatchTime time.Time
-	ClientTime    time.Time
+	UUID       string
+	ClientTime time.Time
 }
 
 func (r LogDeathRequest) Validate() error {
@@ -69,10 +69,6 @@ func (r LogDeathRequest) Validate() error {
 
 	if r.UUID == "" {
 		err.Add(fmt.Errorf("uuid must be set"))
-	}
-
-	if r.StopwatchTime.IsZero() {
-		err.Add(fmt.Errorf("stopwatch time must be set"))
 	}
 
 	if r.ClientTime.IsZero() {
@@ -83,15 +79,15 @@ func (r LogDeathRequest) Validate() error {
 }
 
 type LogDeathResponse struct {
-	ID         int
+	UUID       string
 	ServerTime time.Time
 }
 
 func (r LogDeathResponse) Validate() error {
 	var err errutil.Error
 
-	if r.ID < 0 {
-		err.Add(fmt.Errorf("id must be above 0"))
+	if r.UUID == "" {
+		err.Add(fmt.Errorf("uuid must be set"))
 	}
 
 	if r.ServerTime.IsZero() {
@@ -102,10 +98,9 @@ func (r LogDeathResponse) Validate() error {
 }
 
 type LogCompleteRequest struct {
-	UUID          string
-	StopwatchTime time.Time
-	ClientTime    time.Time
-	Achievement   Achievement
+	UUID        string
+	ClientTime  time.Time
+	Achievement Achievement
 }
 
 func (r LogCompleteRequest) Validate() error {
@@ -113,10 +108,6 @@ func (r LogCompleteRequest) Validate() error {
 
 	if r.UUID == "" {
 		err.Add(fmt.Errorf("uuid must be set"))
-	}
-
-	if r.StopwatchTime.IsZero() {
-		err.Add(fmt.Errorf("stopwatch time must be set"))
 	}
 
 	if r.ClientTime.IsZero() {
@@ -127,15 +118,15 @@ func (r LogCompleteRequest) Validate() error {
 }
 
 type LogCompleteResponse struct {
-	ID         int
+	UUID       string
 	ServerTime time.Time
 }
 
 func (r LogCompleteResponse) Validate() error {
 	var err errutil.Error
 
-	if r.ID < 0 {
-		err.Add(fmt.Errorf("id must be above 0"))
+	if r.UUID == "" {
+		err.Add(fmt.Errorf("uuid must be set"))
 	}
 
 	if r.ServerTime.IsZero() {
@@ -146,9 +137,8 @@ func (r LogCompleteResponse) Validate() error {
 }
 
 type LogGrapplingHookUsageRequest struct {
-	UUID          string
-	StopwatchTime time.Time
-	ClientTime    time.Time
+	UUID       string
+	ClientTime time.Time
 }
 
 func (r LogGrapplingHookUsageRequest) Validate() error {
@@ -156,10 +146,6 @@ func (r LogGrapplingHookUsageRequest) Validate() error {
 
 	if r.UUID == "" {
 		err.Add(fmt.Errorf("uuid must be set"))
-	}
-
-	if r.StopwatchTime.IsZero() {
-		err.Add(fmt.Errorf("stopwatch time must be set"))
 	}
 
 	if r.ClientTime.IsZero() {
@@ -170,15 +156,15 @@ func (r LogGrapplingHookUsageRequest) Validate() error {
 }
 
 type LogGrapplingHookUsageResponse struct {
-	ID         int
+	UUID       string
 	ServerTime time.Time
 }
 
 func (r LogGrapplingHookUsageResponse) Validate() error {
 	var err errutil.Error
 
-	if r.ID < 0 {
-		err.Add(fmt.Errorf("id must be above 0"))
+	if r.UUID == "" {
+		err.Add(fmt.Errorf("uuid must be set"))
 	}
 
 	if r.ServerTime.IsZero() {

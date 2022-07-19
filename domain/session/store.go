@@ -14,6 +14,7 @@ type InsertQuery struct {
 	IP         string
 	URL        string
 	Timezone   string
+	Metadata   map[string]interface{}
 }
 
 type InsertResult struct {

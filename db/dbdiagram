@@ -1,0 +1,50 @@
+Table sessions as s {
+    uuid uuid [pk, unique]
+    client_time timestamp
+    server_time timestamp
+    ip text
+    url text
+    timezone text
+    metadata jsonb
+}
+
+Table levels as l {
+    uuid uuid [pk,unique]
+    session_uuid uuid
+    client_time timestamp
+    server_time timestamp
+    level int
+    metadata jsonb
+}
+
+Ref: l.session_uuid > s.uuid
+
+Table level_complete_events as lce {
+    uuid uuid [pk,unique]
+    level_uuid uuid
+    client_time timestamp
+    server_time timestamp
+    metadata jsonb
+}
+
+Ref: lce.level_uuid > l.uuid
+
+table level_death_events as lde {
+    uuid uuid [pk,unique]
+    level_uuid uuid
+    client_time timestamp
+    server_time timestamp
+    metadata jsonb
+}
+
+Ref: lde.level_uuid > l.uuid
+
+table level_grappling_hook_events as lghe {
+    uuid uuid [pk,unique]
+    level_uuid uuid
+    client_time timestamp
+    server_time timestamp
+    metadata jsonb
+}
+
+Ref: lghe.level_uuid > l.uuid

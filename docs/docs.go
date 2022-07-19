@@ -378,9 +378,6 @@ const docTemplate = `{
                 "client_time": {
                     "type": "string"
                 },
-                "stopwatch_time": {
-                    "type": "string"
-                },
                 "uuid": {
                     "type": "string"
                 }
@@ -389,10 +386,10 @@ const docTemplate = `{
         "controller.handleEventCompleteResponse": {
             "type": "object",
             "properties": {
-                "id": {
-                    "type": "integer"
-                },
                 "server_time": {
+                    "type": "string"
+                },
+                "uuid": {
                     "type": "string"
                 }
             }
@@ -403,9 +400,6 @@ const docTemplate = `{
                 "client_time": {
                     "type": "string"
                 },
-                "stopwatch_time": {
-                    "type": "string"
-                },
                 "uuid": {
                     "type": "string"
                 }
@@ -414,10 +408,10 @@ const docTemplate = `{
         "controller.handleEventDeathResponse": {
             "type": "object",
             "properties": {
-                "id": {
-                    "type": "integer"
-                },
                 "server_time": {
+                    "type": "string"
+                },
+                "uuid": {
                     "type": "string"
                 }
             }
@@ -428,9 +422,6 @@ const docTemplate = `{
                 "client_time": {
                     "type": "string"
                 },
-                "stopwatch_time": {
-                    "type": "string"
-                },
                 "uuid": {
                     "type": "string"
                 }
@@ -439,10 +430,10 @@ const docTemplate = `{
         "controller.handleEventUseGrapplingHookResponse": {
             "type": "object",
             "properties": {
-                "id": {
-                    "type": "integer"
-                },
                 "server_time": {
+                    "type": "string"
+                },
+                "uuid": {
                     "type": "string"
                 }
             }

@@ -371,9 +371,6 @@
                 "client_time": {
                     "type": "string"
                 },
-                "stopwatch_time": {
-                    "type": "string"
-                },
                 "uuid": {
                     "type": "string"
                 }
@@ -382,10 +379,10 @@
         "controller.handleEventCompleteResponse": {
             "type": "object",
             "properties": {
-                "id": {
-                    "type": "integer"
-                },
                 "server_time": {
+                    "type": "string"
+                },
+                "uuid": {
                     "type": "string"
                 }
             }
@@ -396,9 +393,6 @@
                 "client_time": {
                     "type": "string"
                 },
-                "stopwatch_time": {
-                    "type": "string"
-                },
                 "uuid": {
                     "type": "string"
                 }
@@ -407,10 +401,10 @@
         "controller.handleEventDeathResponse": {
             "type": "object",
             "properties": {
-                "id": {
-                    "type": "integer"
-                },
                 "server_time": {
+                    "type": "string"
+                },
+                "uuid": {
                     "type": "string"
                 }
             }
@@ -421,9 +415,6 @@
                 "client_time": {
                     "type": "string"
                 },
-                "stopwatch_time": {
-                    "type": "string"
-                },
                 "uuid": {
                     "type": "string"
                 }
@@ -432,10 +423,10 @@
         "controller.handleEventUseGrapplingHookResponse": {
             "type": "object",
             "properties": {
-                "id": {
-                    "type": "integer"
-                },
                 "server_time": {
+                    "type": "string"
+                },
+                "uuid": {
                     "type": "string"
                 }
             }

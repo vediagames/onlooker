@@ -72,9 +72,8 @@ func (c controller) HandleEventDeath(ctx *gin.Context) {
 	}
 
 	res, err := c.levelService.LogDeath(ctx, leveldomain.LogDeathRequest{
-		UUID:          req.UUID,
-		StopwatchTime: req.StopwatchTime,
-		ClientTime:    req.ClientTime,
+		UUID:       req.UUID,
+		ClientTime: req.ClientTime,
 	})
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, httpError{Message: err.Error()})
@@ -82,19 +81,18 @@ func (c controller) HandleEventDeath(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, handleEventDeathResponse{
-		ID:         res.ID,
+		UUID:       res.UUID,
 		ServerTime: res.ServerTime,
 	})
 }
 
 type handleEventDeathRequest struct {
-	UUID          string    `json:"uuid"`
-	StopwatchTime time.Time `json:"stopwatch_time"`
-	ClientTime    time.Time `json:"client_time"`
+	UUID       string    `json:"uuid"`
+	ClientTime time.Time `json:"client_time"`
 }
 
 type handleEventDeathResponse struct {
-	ID         int       `json:"id"`
+	UUID       string    `json:"uuid"`
 	ServerTime time.Time `json:"server_time"`
 }
 
@@ -117,9 +115,9 @@ func (c controller) HandleEventComplete(ctx *gin.Context) {
 	}
 
 	res, err := c.levelService.LogComplete(ctx, leveldomain.LogCompleteRequest{
-		UUID:          req.UUID,
-		StopwatchTime: req.StopwatchTime,
-		ClientTime:    req.ClientTime,
+		UUID:        req.UUID,
+		ClientTime:  req.ClientTime,
+		Achievement: leveldomain.Achievement(req.Achievement),
 	})
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, httpError{Message: err.Error()})
@@ -127,20 +125,19 @@ func (c controller) HandleEventComplete(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, handleEventCompleteResponse{
-		ID:         res.ID,
+		UUID:       res.UUID,
 		ServerTime: res.ServerTime,
 	})
 }
 
 type handleEventCompleteRequest struct {
-	UUID          string    `json:"uuid"`
-	StopwatchTime time.Time `json:"stopwatch_time"`
-	ClientTime    time.Time `json:"client_time"`
-	Achievement   string    `json:"achievement"`
+	UUID        string    `json:"uuid"`
+	ClientTime  time.Time `json:"client_time"`
+	Achievement string    `json:"achievement"`
 }
 
 type handleEventCompleteResponse struct {
-	ID         int       `json:"id"`
+	UUID       string    `json:"uuid"`
 	ServerTime time.Time `json:"server_time"`
 }
 
@@ -163,9 +160,8 @@ func (c controller) HandleEventUseGrapplingHook(ctx *gin.Context) {
 	}
 
 	res, err := c.levelService.LogGrapplingHookUsage(ctx, leveldomain.LogGrapplingHookUsageRequest{
-		UUID:          req.UUID,
-		StopwatchTime: req.StopwatchTime,
-		ClientTime:    req.ClientTime,
+		UUID:       req.UUID,
+		ClientTime: req.ClientTime,
 	})
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, httpError{Message: err.Error()})
@@ -173,18 +169,17 @@ func (c controller) HandleEventUseGrapplingHook(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, handleEventUseGrapplingHookResponse{
-		ID:         res.ID,
+		UUID:       res.UUID,
 		ServerTime: res.ServerTime,
 	})
 }
 
 type handleEventUseGrapplingHookRequest struct {
-	UUID          string    `json:"uuid"`
-	StopwatchTime time.Time `json:"stopwatch_time"`
-	ClientTime    time.Time `json:"client_time"`
+	UUID       string    `json:"uuid"`
+	ClientTime time.Time `json:"client_time"`
 }
 
 type handleEventUseGrapplingHookResponse struct {
-	ID         int       `json:"id"`
+	UUID       string    `json:"uuid"`
 	ServerTime time.Time `json:"server_time"`
 }

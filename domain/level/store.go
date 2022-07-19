@@ -17,6 +17,7 @@ type InsertQuery struct {
 	SessionUUID string
 	Level       int
 	ClientTime  time.Time
+	Metadata    map[string]interface{}
 }
 
 type InsertResult struct {
@@ -25,11 +26,10 @@ type InsertResult struct {
 }
 
 type InsertEventQuery struct {
-	UUID          string
-	Event         Event
-	StopWatchTime time.Time
-	ClientTime    time.Time
-	Metadata      map[string]interface{}
+	UUID       string
+	Event      Event
+	ClientTime time.Time
+	Metadata   map[string]interface{}
 }
 
 func (q InsertEventQuery) Validate() error {
@@ -43,7 +43,7 @@ func (q InsertEventQuery) Validate() error {
 }
 
 type InsertEventResult struct {
-	ID         int
+	UUID       string
 	ServerTime time.Time
 }
 

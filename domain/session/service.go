@@ -17,6 +17,7 @@ type CreateRequest struct {
 	IP         string
 	URL        string
 	Timezone   string
+	Metadata   map[string]interface{}
 }
 
 func (r CreateRequest) Validate() error {

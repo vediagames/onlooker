@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	_ "github.com/lib/pq"
 	"github.com/rs/zerolog"
 	"github.com/spf13/viper"
 	swaggerFiles "github.com/swaggo/files"
@@ -14,7 +13,9 @@ import (
 	"github.com/vediagames/onlooker/controller"
 	_ "github.com/vediagames/onlooker/docs"
 	levelservice "github.com/vediagames/onlooker/level/service"
+	levelpostgresql "github.com/vediagames/onlooker/level/store/postgresql"
 	sessionservice "github.com/vediagames/onlooker/session/service"
+	sessionpostgresql "github.com/vediagames/onlooker/session/store/postgresql"
 )
 
 // @title        Onlooker Rest API
@@ -46,6 +47,7 @@ func main() {
 		Logger()
 
 	viper.AutomaticEnv()
+	viper.SetEnvPrefix("ONLOOKER")
 
 	r := gin.New()
 
@@ -82,13 +84,43 @@ func main() {
 		l.Info().TimeDiff("latency", time.Now(), start).Msg("finished request")
 	})
 
-	//levelService := levelservice.New(levelservice.Config{})
-	//
-	//sessionService := sessionservice.New(sessionservice.Config{})
+	if !viper.IsSet("PSQL_CONNECTION_STRING") {
+		logger.Fatal().Msg("PSQL_CONNECTION_STRING is not set")
+	}
+
+	psqlConnString := viper.GetString("PSQL_CONNECTION_STRING")
+
+	levelStore, err := levelpostgresql.New(levelpostgresql.Config{
+		ConnectionString: psqlConnString,
+	})
+	if err != nil {
+		logger.Fatal().Err(err).Msgf("failed to create level store: %w", err)
+	}
+
+	levelService, err := levelservice.New(levelservice.Config{
+		Store: levelStore,
+	})
+	if err != nil {
+		logger.Fatal().Err(err).Msgf("failed to create level service: %w", err)
+	}
+
+	sessionStore, err := sessionpostgresql.New(sessionpostgresql.Config{
+		ConnectionString: psqlConnString,
+	})
+	if err != nil {
+		logger.Fatal().Err(err).Msgf("failed to create session store: %w", err)
+	}
+
+	sessionService, err := sessionservice.New(sessionservice.Config{
+		Store: sessionStore,
+	})
+	if err != nil {
+		logger.Fatal().Err(err).Msgf("failed to create session service: %w", err)
+	}
 
 	c := controller.New(controller.Config{
-		LevelService:   levelservice.NewMock(),
-		SessionService: sessionservice.NewMock(),
+		LevelService:   levelService,
+		SessionService: sessionService,
 	})
 
 	v1 := r.Group("/api/v1")

@@ -40,48 +40,42 @@ definitions:
         type: string
       client_time:
         type: string
-      stopwatch_time:
-        type: string
       uuid:
         type: string
     type: object
   controller.handleEventCompleteResponse:
     properties:
-      id:
-        type: integer
       server_time:
+        type: string
+      uuid:
         type: string
     type: object
   controller.handleEventDeathRequest:
     properties:
       client_time:
         type: string
-      stopwatch_time:
-        type: string
       uuid:
         type: string
     type: object
   controller.handleEventDeathResponse:
     properties:
-      id:
-        type: integer
       server_time:
+        type: string
+      uuid:
         type: string
     type: object
   controller.handleEventUseGrapplingHookRequest:
     properties:
       client_time:
         type: string
-      stopwatch_time:
-        type: string
       uuid:
         type: string
     type: object
   controller.handleEventUseGrapplingHookResponse:
     properties:
-      id:
-        type: integer
       server_time:
+        type: string
+      uuid:
         type: string
     type: object
   controller.helloResponse:

@@ -61,10 +61,9 @@ func (s service) LogDeath(ctx context.Context, req domain.LogDeathRequest) (doma
 	}
 
 	insertRes, err := s.store.InsertEvent(ctx, domain.InsertEventQuery{
-		UUID:          req.UUID,
-		Event:         domain.EventDeath,
-		StopWatchTime: req.StopwatchTime,
-		ClientTime:    req.ClientTime,
+		UUID:       req.UUID,
+		Event:      domain.EventDeath,
+		ClientTime: req.ClientTime,
 	})
 	if err != nil {
 		return domain.LogDeathResponse{}, fmt.Errorf("failed to insert event: %w", err)
@@ -85,10 +84,12 @@ func (s service) LogComplete(ctx context.Context, req domain.LogCompleteRequest)
 	}
 
 	insertRes, err := s.store.InsertEvent(ctx, domain.InsertEventQuery{
-		UUID:          req.UUID,
-		Event:         domain.EventComplete,
-		StopWatchTime: req.StopwatchTime,
-		ClientTime:    req.ClientTime,
+		UUID:       req.UUID,
+		Event:      domain.EventComplete,
+		ClientTime: req.ClientTime,
+		Metadata: map[string]interface{}{
+			"achievement": req.Achievement,
+		},
 	})
 	if err != nil {
 		return domain.LogCompleteResponse{}, fmt.Errorf("failed to insert event: %w", err)
@@ -109,10 +110,9 @@ func (s service) LogGrapplingHookUsage(ctx context.Context, req domain.LogGrappl
 	}
 
 	insertRes, err := s.store.InsertEvent(ctx, domain.InsertEventQuery{
-		UUID:          req.UUID,
-		Event:         domain.EventGrapplingHookUsage,
-		StopWatchTime: req.StopwatchTime,
-		ClientTime:    req.ClientTime,
+		UUID:       req.UUID,
+		Event:      domain.EventGrapplingHookUsage,
+		ClientTime: req.ClientTime,
 	})
 	if err != nil {
 		return domain.LogGrapplingHookUsageResponse{}, fmt.Errorf("failed to insert event: %w", err)

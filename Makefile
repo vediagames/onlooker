@@ -23,3 +23,6 @@ swag/fmt:
 
 swag/init:
 	swag init
+
+migrate/new/%:
+	@migrate create -ext sql -dir ./db/schema/ -seq $*.sql
