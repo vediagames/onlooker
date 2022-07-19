@@ -19,41 +19,9 @@ type InsertQuery struct {
 	ClientTime  time.Time
 }
 
-func (q InsertQuery) Validate() error {
-	var err errutil.Error
-
-	if q.SessionUUID == "" {
-		err.Add(fmt.Errorf("session uuid must be set"))
-	}
-
-	if q.Level < 0 {
-		err.Add(fmt.Errorf("level must be above 0"))
-	}
-
-	if q.ClientTime.IsZero() {
-		err.Add(fmt.Errorf("client time must be set"))
-	}
-
-	return err.Err()
-}
-
 type InsertResult struct {
 	UUID       string
 	ServerTime time.Time
-}
-
-func (r InsertResult) Validate() error {
-	var err errutil.Error
-
-	if r.UUID == "" {
-		err.Add(fmt.Errorf("uuid must be set"))
-	}
-
-	if r.ServerTime.IsZero() {
-		err.Add(fmt.Errorf("server time must be set"))
-	}
-
-	return err.Err()
 }
 
 type InsertEventQuery struct {
@@ -67,20 +35,8 @@ type InsertEventQuery struct {
 func (q InsertEventQuery) Validate() error {
 	var err errutil.Error
 
-	if q.UUID == "" {
-		err.Add(fmt.Errorf("uuid must be set"))
-	}
-
 	if ve := q.Event.Validate(); ve != nil {
 		err.Add(ve)
-	}
-
-	if q.StopWatchTime.IsZero() {
-		err.Add(fmt.Errorf("stop watch time must be set"))
-	}
-
-	if q.ClientTime.IsZero() {
-		err.Add(fmt.Errorf("client time must be set"))
 	}
 
 	return err.Err()
@@ -89,20 +45,6 @@ func (q InsertEventQuery) Validate() error {
 type InsertEventResult struct {
 	ID         int
 	ServerTime time.Time
-}
-
-func (r InsertEventResult) Validate() error {
-	var err errutil.Error
-
-	if r.ID < 0 {
-		err.Add(fmt.Errorf("id must be above 0"))
-	}
-
-	if r.ServerTime.IsZero() {
-		err.Add(fmt.Errorf("server time must be set"))
-	}
-
-	return err.Err()
 }
 
 type Event string

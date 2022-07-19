@@ -188,10 +188,10 @@ func (r LogGrapplingHookUsageResponse) Validate() error {
 	return err.Err()
 }
 
-type Achievement int
+type Achievement string
 
 const (
-	AchievementThreeStars Achievement = 3
-	AchievementTwoStars   Achievement = 2
-	AchievementOneStar    Achievement = 1
+	AchievementThreeStars Achievement = "three_stars"
+	AchievementTwoStars   Achievement = "two_stars"
+	AchievementOneStar    Achievement = "one_star"
 )

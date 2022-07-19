@@ -18,5 +18,8 @@ gqlgen:
 build:
 	@docker build -f ./build/Dockerfile -t $(img_name):$(version) --build-arg GITHUB_TOKEN=$(GITHUB_TOKEN) .
 
-swag:
+swag/fmt:
 	swag fmt
+
+swag/init:
+	swag init

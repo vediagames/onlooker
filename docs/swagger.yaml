@@ -1,16 +1,97 @@
 basePath: /api/v1
 definitions:
-  main.helloResponse:
+  controller.createLevelRequest:
+    properties:
+      client_time:
+        type: string
+      level:
+        type: integer
+      session_uuid:
+        type: string
+    type: object
+  controller.createLevelResponse:
+    properties:
+      server_time:
+        type: string
+      uuid:
+        type: string
+    type: object
+  controller.createSessionRequest:
+    properties:
+      client_time:
+        type: string
+      ip:
+        type: string
+      timezone:
+        type: string
+      url:
+        type: string
+    type: object
+  controller.createSessionResponse:
+    properties:
+      server_time:
+        type: string
+      uuid:
+        type: string
+    type: object
+  controller.handleEventCompleteRequest:
+    properties:
+      achievement:
+        type: string
+      client_time:
+        type: string
+      stopwatch_time:
+        type: string
+      uuid:
+        type: string
+    type: object
+  controller.handleEventCompleteResponse:
+    properties:
+      id:
+        type: integer
+      server_time:
+        type: string
+    type: object
+  controller.handleEventDeathRequest:
+    properties:
+      client_time:
+        type: string
+      stopwatch_time:
+        type: string
+      uuid:
+        type: string
+    type: object
+  controller.handleEventDeathResponse:
+    properties:
+      id:
+        type: integer
+      server_time:
+        type: string
+    type: object
+  controller.handleEventUseGrapplingHookRequest:
+    properties:
+      client_time:
+        type: string
+      stopwatch_time:
+        type: string
+      uuid:
+        type: string
+    type: object
+  controller.handleEventUseGrapplingHookResponse:
+    properties:
+      id:
+        type: integer
+      server_time:
+        type: string
+    type: object
+  controller.helloResponse:
     properties:
       message:
         example: Hello world!
         type: string
     type: object
-  main.httpError:
+  controller.httpError:
     properties:
-      code:
-        example: 400
-        type: integer
       message:
         example: status bad request
         type: string
@@ -37,20 +118,185 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/main.helloResponse'
+            $ref: '#/definitions/controller.helloResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/main.httpError'
+            $ref: '#/definitions/controller.httpError'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/main.httpError'
+            $ref: '#/definitions/controller.httpError'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/main.httpError'
+            $ref: '#/definitions/controller.httpError'
       summary: Hello World
+  /level:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Create level
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/controller.createLevelRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.createLevelResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.httpError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controller.httpError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controller.httpError'
+      summary: Creates level object
+      tags:
+      - level
+  /level/event/complete:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Log completion
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/controller.handleEventCompleteRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.handleEventCompleteResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.httpError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controller.httpError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controller.httpError'
+      summary: Logs completion of level
+      tags:
+      - level
+  /level/event/death:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Log death
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/controller.handleEventDeathRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.handleEventDeathResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.httpError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controller.httpError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controller.httpError'
+      summary: Logs death of player in level
+      tags:
+      - level
+  /level/event/grappling-hook-usage:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Log grappling hook usage
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/controller.handleEventUseGrapplingHookRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.handleEventUseGrapplingHookResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.httpError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controller.httpError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controller.httpError'
+      summary: Logs usage of grappling hook
+      tags:
+      - level
+  /session:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Create session
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/controller.createSessionRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.createSessionResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.httpError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controller.httpError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controller.httpError'
+      summary: Creates session object
+      tags:
+      - session
 securityDefinitions:
   ApiKeyAuth:
     description: Token to access the API.

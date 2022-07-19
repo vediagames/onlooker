@@ -1,28 +1,38 @@
-package main
+package controller
 
 import (
 	"github.com/gin-gonic/gin"
 	leveldomain "github.com/vediagames/onlooker/domain/level"
+	sessiondomain "github.com/vediagames/onlooker/domain/session"
 )
 
 type Controller interface {
 	Hello(ctx *gin.Context)
+	CreateSession(ctx *gin.Context)
+	CreateLevel(ctx *gin.Context)
+	HandleEventDeath(ctx *gin.Context)
+	HandleEventComplete(ctx *gin.Context)
+	HandleEventUseGrapplingHook(ctx *gin.Context)
 }
 
 type controller struct {
-	levelService leveldomain.Service
+	levelService   leveldomain.Service
+	sessionService sessiondomain.Service
 }
 
-type ControllerConfig struct {
-	LevelService leveldomain.Service
+type Config struct {
+	LevelService   leveldomain.Service
+	SessionService sessiondomain.Service
 }
 
-func NewController(cfg ControllerConfig) Controller {
-	return &controller{levelService: cfg.LevelService}
+func New(cfg Config) Controller {
+	return &controller{
+		levelService:   cfg.LevelService,
+		sessionService: cfg.SessionService,
+	}
 }
 
 type httpError struct {
-	Code    int    `json:"code" example:"400"`
 	Message string `json:"message" example:"status bad request"`
 }
 

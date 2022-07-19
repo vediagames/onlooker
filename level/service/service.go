@@ -1,10 +1,11 @@
-package level
+package service
 
 import (
 	"context"
 	"fmt"
 
 	domain "github.com/vediagames/onlooker/domain/level"
+	"github.com/vediagames/onlooker/errutil"
 )
 
 type service struct {
@@ -12,15 +13,32 @@ type service struct {
 }
 
 type Config struct {
+	Store domain.Store
 }
 
-func New(cfg Config) domain.Service {
-	return &service{}
+func (c Config) Validate() error {
+	var err errutil.Error
+
+	if c.Store == nil {
+		err.Add(fmt.Errorf("store is empty"))
+	}
+
+	return err.Err()
+}
+
+func New(cfg Config) (domain.Service, error) {
+	if ve := cfg.Validate(); ve != nil {
+		return nil, fmt.Errorf("invalid config: %w", ve)
+	}
+
+	return &service{
+		store: cfg.Store,
+	}, nil
 }
 
 func (s service) Create(ctx context.Context, req domain.CreateRequest) (domain.CreateResponse, error) {
 	if err := req.Validate(); err != nil {
-		return domain.CreateResponse{}, fmt.Errorf("failed to validate request: %w", err)
+		return domain.CreateResponse{}, fmt.Errorf("invalid request: %w", err)
 	}
 
 	newRes, err := s.store.Insert(ctx, domain.InsertQuery(req))
@@ -31,7 +49,7 @@ func (s service) Create(ctx context.Context, req domain.CreateRequest) (domain.C
 	res := domain.CreateResponse(newRes)
 
 	if err := res.Validate(); err != nil {
-		return domain.CreateResponse{}, fmt.Errorf("failed to validate response: %w", err)
+		return domain.CreateResponse{}, fmt.Errorf("invalid response: %w", err)
 	}
 
 	return res, nil
@@ -39,7 +57,7 @@ func (s service) Create(ctx context.Context, req domain.CreateRequest) (domain.C
 
 func (s service) LogDeath(ctx context.Context, req domain.LogDeathRequest) (domain.LogDeathResponse, error) {
 	if err := req.Validate(); err != nil {
-		return domain.LogDeathResponse{}, fmt.Errorf("failed to validate request: %w", err)
+		return domain.LogDeathResponse{}, fmt.Errorf("invalid request: %w", err)
 	}
 
 	insertRes, err := s.store.InsertEvent(ctx, domain.InsertEventQuery{
@@ -55,7 +73,7 @@ func (s service) LogDeath(ctx context.Context, req domain.LogDeathRequest) (doma
 	res := domain.LogDeathResponse(insertRes)
 
 	if err := res.Validate(); err != nil {
-		return domain.LogDeathResponse{}, fmt.Errorf("failed to validate response: %w", err)
+		return domain.LogDeathResponse{}, fmt.Errorf("invalid response: %w", err)
 	}
 
 	return res, nil
@@ -63,7 +81,7 @@ func (s service) LogDeath(ctx context.Context, req domain.LogDeathRequest) (doma
 
 func (s service) LogComplete(ctx context.Context, req domain.LogCompleteRequest) (domain.LogCompleteResponse, error) {
 	if err := req.Validate(); err != nil {
-		return domain.LogCompleteResponse{}, fmt.Errorf("failed to validate request: %w", err)
+		return domain.LogCompleteResponse{}, fmt.Errorf("invalid request: %w", err)
 	}
 
 	insertRes, err := s.store.InsertEvent(ctx, domain.InsertEventQuery{
@@ -79,7 +97,7 @@ func (s service) LogComplete(ctx context.Context, req domain.LogCompleteRequest)
 	res := domain.LogCompleteResponse(insertRes)
 
 	if err := res.Validate(); err != nil {
-		return domain.LogCompleteResponse{}, fmt.Errorf("failed to validate response: %w", err)
+		return domain.LogCompleteResponse{}, fmt.Errorf("invalid response: %w", err)
 	}
 
 	return res, nil
@@ -87,7 +105,7 @@ func (s service) LogComplete(ctx context.Context, req domain.LogCompleteRequest)
 
 func (s service) LogGrapplingHookUsage(ctx context.Context, req domain.LogGrapplingHookUsageRequest) (domain.LogGrapplingHookUsageResponse, error) {
 	if err := req.Validate(); err != nil {
-		return domain.LogGrapplingHookUsageResponse{}, fmt.Errorf("failed to validate request: %w", err)
+		return domain.LogGrapplingHookUsageResponse{}, fmt.Errorf("invalid request: %w", err)
 	}
 
 	insertRes, err := s.store.InsertEvent(ctx, domain.InsertEventQuery{
@@ -103,7 +121,7 @@ func (s service) LogGrapplingHookUsage(ctx context.Context, req domain.LogGrappl
 	res := domain.LogGrapplingHookUsageResponse(insertRes)
 
 	if err := res.Validate(); err != nil {
-		return domain.LogGrapplingHookUsageResponse{}, fmt.Errorf("failed to validate response: %w", err)
+		return domain.LogGrapplingHookUsageResponse{}, fmt.Errorf("invalid response: %w", err)
 	}
 
 	return res, nil
