@@ -94,28 +94,28 @@ func main() {
 		ConnectionString: psqlConnString,
 	})
 	if err != nil {
-		logger.Fatal().Err(err).Msgf("failed to create level store: %w", err)
+		logger.Fatal().Err(err).Msgf("failed to create level store: %s", err)
 	}
 
 	levelService, err := levelservice.New(levelservice.Config{
 		Store: levelStore,
 	})
 	if err != nil {
-		logger.Fatal().Err(err).Msgf("failed to create level service: %w", err)
+		logger.Fatal().Err(err).Msgf("failed to create level service: %s", err)
 	}
 
 	sessionStore, err := sessionpostgresql.New(sessionpostgresql.Config{
 		ConnectionString: psqlConnString,
 	})
 	if err != nil {
-		logger.Fatal().Err(err).Msgf("failed to create session store: %w", err)
+		logger.Fatal().Err(err).Msgf("failed to create session store: %s", err)
 	}
 
 	sessionService, err := sessionservice.New(sessionservice.Config{
 		Store: sessionStore,
 	})
 	if err != nil {
-		logger.Fatal().Err(err).Msgf("failed to create session service: %w", err)
+		logger.Fatal().Err(err).Msgf("failed to create session service: %s", err)
 	}
 
 	c := controller.New(controller.Config{
