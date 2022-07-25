@@ -115,9 +115,10 @@ func (c controller) HandleEventComplete(ctx *gin.Context) {
 	}
 
 	res, err := c.levelService.LogComplete(ctx, leveldomain.LogCompleteRequest{
-		UUID:        req.UUID,
-		ClientTime:  req.ClientTime,
-		Achievement: leveldomain.Achievement(req.Achievement),
+		UUID:           req.UUID,
+		ClientTime:     req.ClientTime,
+		Achievement:    leveldomain.Achievement(req.Achievement),
+		CompletionTime: time.Duration(req.CompletionTimeSeconds),
 	})
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, httpError{Message: err.Error()})
@@ -131,9 +132,10 @@ func (c controller) HandleEventComplete(ctx *gin.Context) {
 }
 
 type handleEventCompleteRequest struct {
-	UUID        string    `json:"uuid"`
-	ClientTime  time.Time `json:"client_time"`
-	Achievement string    `json:"achievement"`
+	UUID                  string    `json:"uuid"`
+	ClientTime            time.Time `json:"client_time"`
+	Achievement           string    `json:"achievement"`
+	CompletionTimeSeconds int       `json:"completion_time_seconds"`
 }
 
 type handleEventCompleteResponse struct {

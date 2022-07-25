@@ -378,6 +378,9 @@ const docTemplate = `{
                 "client_time": {
                     "type": "string"
                 },
+                "completion_time_seconds": {
+                    "type": "integer"
+                },
                 "uuid": {
                     "type": "string"
                 }

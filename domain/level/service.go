@@ -98,9 +98,10 @@ func (r LogDeathResponse) Validate() error {
 }
 
 type LogCompleteRequest struct {
-	UUID        string
-	ClientTime  time.Time
-	Achievement Achievement
+	UUID           string
+	ClientTime     time.Time
+	Achievement    Achievement
+	CompletionTime time.Duration
 }
 
 func (r LogCompleteRequest) Validate() error {
@@ -108,6 +109,10 @@ func (r LogCompleteRequest) Validate() error {
 
 	if r.UUID == "" {
 		err.Add(fmt.Errorf("uuid must be set"))
+	}
+
+	if r.CompletionTime < 0 {
+		err.Add(fmt.Errorf("completion time must be above 0"))
 	}
 
 	if r.ClientTime.IsZero() {

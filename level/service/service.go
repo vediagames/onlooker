@@ -88,7 +88,8 @@ func (s service) LogComplete(ctx context.Context, req domain.LogCompleteRequest)
 		Event:      domain.EventComplete,
 		ClientTime: req.ClientTime,
 		Metadata: map[string]interface{}{
-			"achievement": req.Achievement,
+			"achievement":     req.Achievement,
+			"completion_time": req.CompletionTime,
 		},
 	})
 	if err != nil {

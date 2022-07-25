@@ -40,6 +40,8 @@ definitions:
         type: string
       client_time:
         type: string
+      completion_time_seconds:
+        type: integer
       uuid:
         type: string
     type: object
