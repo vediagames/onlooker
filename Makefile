@@ -12,9 +12,6 @@ setup:
 	git config --global --add url."git@github.com:".insteadOf "https://github.com/"
 	go env -w GOPRIVATE=github.com/vediagames/*
 
-gqlgen:
-	go get github.com/99designs/gqlgen && go run github.com/99designs/gqlgen generate
-
 build:
 	@docker build -f ./build/Dockerfile -t $(img_name):$(version) --build-arg GITHUB_TOKEN=$(GITHUB_TOKEN) .
 
