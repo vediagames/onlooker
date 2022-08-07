@@ -23,3 +23,6 @@ swag/init:
 
 migrate/new/%:
 	@migrate create -ext sql -dir ./db/schema/ -seq $*.sql
+
+migrate/up:
+	migrate -database ${POSTGRES_CONN_STRING} -path db/schema  up
