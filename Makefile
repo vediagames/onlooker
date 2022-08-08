@@ -1,7 +1,6 @@
 .PHONY: gqlgen up build
 
 img_name = eu.gcr.io/vediagames/onlooker
-version = latest
 env_file = ./.env
 
 include $(env_file)
@@ -12,8 +11,8 @@ setup:
 	git config --global --add url."git@github.com:".insteadOf "https://github.com/"
 	go env -w GOPRIVATE=github.com/vediagames/*
 
-build:
-	@docker build -f ./build/Dockerfile -t $(img_name):$(version) --build-arg GITHUB_TOKEN=$(GITHUB_TOKEN) .
+build/%:
+	@docker build -f ./build/Dockerfile -t $(img_name):$* --build-arg GITHUB_TOKEN=$(GITHUB_TOKEN) .
 
 swag/fmt:
 	swag fmt
