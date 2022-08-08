@@ -5,6 +5,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog"
 	"github.com/spf13/viper"
@@ -103,6 +104,15 @@ func main() {
 
 		ctx.Next()
 	})
+
+	r.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"*"},
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
+		ExposeHeaders:    []string{"Link"},
+		MaxAge:           12 * time.Hour,
+		AllowCredentials: true,
+	}))
 
 	if !viper.IsSet("PSQL_CONNECTION_STRING") {
 		logger.Fatal().Msg("PSQL_CONNECTION_STRING is not set")
