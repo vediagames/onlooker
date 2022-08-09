@@ -5,7 +5,6 @@ import (
 	"os"
 	"time"
 
-	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog"
 	"github.com/spf13/viper"
@@ -53,67 +52,6 @@ func main() {
 
 	apiToken := viper.GetString("API_TOKEN")
 
-	r := gin.New()
-
-	if err := r.SetTrustedProxies(nil); err != nil {
-		logger.Fatal().Err(err).Msgf("failed to set trusted proxies: %w", err)
-	}
-
-	r.Use(gin.Recovery())
-	r.Use(func(ctx *gin.Context) {
-		start := time.Now()
-
-		l := logger.With().
-			Str("method", ctx.Request.Method).
-			Str("url", ctx.Request.RequestURI).
-			Str("client_ip", ctx.ClientIP()).
-			Logger()
-
-		ctx.Request = ctx.Request.WithContext(
-			l.WithContext(ctx.Request.Context()),
-		)
-
-		ctx.Next()
-
-		l = l.With().
-			Int("code", ctx.Writer.Status()).
-			Int("size", ctx.Writer.Size()).
-			Logger()
-
-		if ctx.Err() != nil {
-			l.Error().
-				Err(ctx.Err()).
-				Msgf("failed request: %w", ctx.Err())
-		}
-
-		l.Info().TimeDiff("latency", time.Now(), start).Msg("finished request")
-	})
-
-	r.Use(func(ctx *gin.Context) {
-		// validate api token
-		auth := ctx.GetHeader("Authorization")
-		if auth == "" {
-			ctx.AbortWithStatus(401)
-			return
-		}
-
-		if auth != fmt.Sprintf("Bearer %s", apiToken) {
-			ctx.AbortWithStatus(403)
-			return
-		}
-
-		ctx.Next()
-	})
-
-	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"*"},
-		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"},
-		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
-		ExposeHeaders:    []string{"Link"},
-		MaxAge:           12 * time.Hour,
-		AllowCredentials: true,
-	}))
-
 	if !viper.IsSet("PSQL_CONNECTION_STRING") {
 		logger.Fatal().Msg("PSQL_CONNECTION_STRING is not set")
 	}
@@ -153,6 +91,12 @@ func main() {
 		SessionService: sessionService,
 	})
 
+	r := gin.New()
+	r.Use(loggerMiddleware(logger))
+	r.Use(corsMiddleware())
+	r.Use(authMiddleware(apiToken))
+	r.Use(gin.Recovery())
+
 	v1 := r.Group("/api/v1")
 
 	v1.GET("/hello", c.Hello)
@@ -177,5 +121,65 @@ func main() {
 
 	if err := r.Run(fmt.Sprintf(":%s", port)); err != nil {
 		logger.Fatal().Err(err).Msgf("failed to run the server: %w", err)
+	}
+}
+
+func authMiddleware(apiToken string) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		auth := ctx.GetHeader("Authorization")
+		if auth == "" {
+			ctx.AbortWithError(401, fmt.Errorf("missing authorization header"))
+			return
+		}
+
+		if auth != fmt.Sprintf("Bearer %s", apiToken) {
+			ctx.AbortWithError(403, fmt.Errorf("invalid token"))
+			return
+		}
+	}
+}
+
+func corsMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
+		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
+		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT")
+
+		if c.Request.Method == "OPTIONS" {
+			c.AbortWithStatus(204)
+			return
+		}
+	}
+}
+
+func loggerMiddleware(logger zerolog.Logger) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		start := time.Now()
+
+		l := logger.With().
+			Str("method", ctx.Request.Method).
+			Str("url", ctx.Request.RequestURI).
+			Str("client_ip", ctx.ClientIP()).
+			Logger()
+
+		ctx.Request = ctx.Request.WithContext(
+			l.WithContext(ctx.Request.Context()),
+		)
+
+		ctx.Next()
+
+		l = l.With().
+			Int("code", ctx.Writer.Status()).
+			Int("size", ctx.Writer.Size()).
+			Logger()
+
+		if ctx.Err() != nil {
+			l.Error().
+				Err(ctx.Err()).
+				Msgf("failed request: %w", ctx.Err())
+		}
+
+		l.Info().TimeDiff("latency", time.Now(), start).Msg("finished request")
 	}
 }
