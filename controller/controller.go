@@ -11,9 +11,22 @@ type Controller interface {
 	CreateSession(ctx *gin.Context)
 	CreateLevel(ctx *gin.Context)
 	HandleEventDeath(ctx *gin.Context)
+	HandleEventsDeath(ctx *gin.Context)
 	HandleEventComplete(ctx *gin.Context)
+	HandleEventsComplete(ctx *gin.Context)
 	HandleEventUseGrapplingHook(ctx *gin.Context)
+	HandleEventsUseGrapplingHook(ctx *gin.Context)
 }
+
+type key string
+
+func (k key) String() string {
+	return string(k)
+}
+
+const (
+	KeyRealIP = key("Real-IP")
+)
 
 type controller struct {
 	levelService   leveldomain.Service

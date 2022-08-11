@@ -80,6 +80,48 @@ definitions:
       uuid:
         type: string
     type: object
+  controller.handleEventsCompleteRequest:
+    properties:
+      requests:
+        items:
+          $ref: '#/definitions/controller.handleEventCompleteRequest'
+        type: array
+    type: object
+  controller.handleEventsCompleteResponse:
+    properties:
+      responses:
+        items:
+          $ref: '#/definitions/controller.handleEventCompleteResponse'
+        type: array
+    type: object
+  controller.handleEventsDeathRequest:
+    properties:
+      requests:
+        items:
+          $ref: '#/definitions/controller.handleEventDeathRequest'
+        type: array
+    type: object
+  controller.handleEventsDeathResponse:
+    properties:
+      responses:
+        items:
+          $ref: '#/definitions/controller.handleEventDeathResponse'
+        type: array
+    type: object
+  controller.handleEventsUseGrapplingHookRequest:
+    properties:
+      requests:
+        items:
+          $ref: '#/definitions/controller.handleEventUseGrapplingHookRequest'
+        type: array
+    type: object
+  controller.handleEventsUseGrapplingHookResponse:
+    properties:
+      responses:
+        items:
+          $ref: '#/definitions/controller.handleEventUseGrapplingHookResponse'
+        type: array
+    type: object
   controller.helloResponse:
     properties:
       message:
@@ -161,6 +203,7 @@ paths:
       summary: Creates level object
       tags:
       - level
+      - create
   /level/event/complete:
     post:
       consumes:
@@ -194,6 +237,8 @@ paths:
       summary: Logs completion of level
       tags:
       - level
+      - event
+      - complete
   /level/event/death:
     post:
       consumes:
@@ -227,6 +272,8 @@ paths:
       summary: Logs death of player in level
       tags:
       - level
+      - event
+      - death
   /level/event/grappling-hook-usage:
     post:
       consumes:
@@ -260,6 +307,113 @@ paths:
       summary: Logs usage of grappling hook
       tags:
       - level
+      - grappling hook
+      - event
+  /level/events/complete:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Log completion
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/controller.handleEventsCompleteRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.handleEventsCompleteResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.httpError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controller.httpError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controller.httpError'
+      summary: Logs completion of level
+      tags:
+      - level
+      - events
+      - complete
+  /level/events/death:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Log death
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/controller.handleEventsDeathRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.handleEventsDeathResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.httpError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controller.httpError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controller.httpError'
+      summary: Logs death of level
+      tags:
+      - level
+      - death
+      - events
+  /level/events/grappling-hook-usage:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Log grappling hook usage
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/controller.handleEventsUseGrapplingHookRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.handleEventsUseGrapplingHookResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.httpError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controller.httpError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controller.httpError'
+      summary: Logs usage of grappling hook
+      tags:
+      - level
+      - grappling hook
+      - events
   /session:
     post:
       consumes:

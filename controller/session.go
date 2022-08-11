@@ -26,12 +26,12 @@ func (c controller) CreateSession(ctx *gin.Context) {
 		return
 	}
 
-	ip := ctx.ClientIP()
+	ip := ctx.GetString(KeyRealIP.String())
 	if ip == "" {
 		ip = "Not found"
 	}
 
-	res, err := c.sessionService.Create(ctx, sessiondomain.CreateRequest{
+	res, err := c.sessionService.Create(ctx.Request.Context(), sessiondomain.CreateRequest{
 		ClientTime: req.ClientTime,
 		IP:         ip,
 		URL:        req.URL,

@@ -56,6 +56,10 @@ func main() {
 		logger.Fatal().Msg("PSQL_CONNECTION_STRING is not set")
 	}
 
+	if !viper.IsSet("SECURE") {
+		logger.Fatal().Msg("SECURE is not set")
+	}
+
 	psqlConnString := viper.GetString("PSQL_CONNECTION_STRING")
 
 	levelStore, err := levelpostgresql.New(levelpostgresql.Config{
@@ -92,10 +96,13 @@ func main() {
 	})
 
 	r := gin.New()
-	r.Use(loggerMiddleware(logger))
-	r.Use(corsMiddleware())
-	r.Use(authMiddleware(apiToken))
 	r.Use(gin.Recovery())
+	r.Use(loggerMiddleware(&logger))
+	r.Use(corsMiddleware())
+
+	if viper.GetBool("SECURE") {
+		r.Use(authMiddleware(apiToken))
+	}
 
 	v1 := r.Group("/api/v1")
 
@@ -111,6 +118,11 @@ func main() {
 	levelEvent.POST("/death", c.HandleEventDeath)
 	levelEvent.POST("/complete", c.HandleEventComplete)
 	levelEvent.POST("/grappling-hook-usage", c.HandleEventUseGrapplingHook)
+
+	levelEvents := level.Group("/events")
+	levelEvents.POST("/death", c.HandleEventsDeath)
+	levelEvents.POST("/complete", c.HandleEventsComplete)
+	levelEvents.POST("/grappling-hook-usage", c.HandleEventsUseGrapplingHook)
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
@@ -153,14 +165,21 @@ func corsMiddleware() gin.HandlerFunc {
 	}
 }
 
-func loggerMiddleware(logger zerolog.Logger) gin.HandlerFunc {
+func loggerMiddleware(logger *zerolog.Logger) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		start := time.Now()
+
+		ip := ctx.GetHeader("CF-Connecting-IP")
+		if ip == "" {
+			ip = ctx.ClientIP()
+		}
+
+		ctx.Set(controller.KeyRealIP.String(), ip)
 
 		l := logger.With().
 			Str("method", ctx.Request.Method).
 			Str("url", ctx.Request.RequestURI).
-			Str("client_ip", ctx.ClientIP()).
+			Interface("client_ip", ip).
 			Logger()
 
 		ctx.Request = ctx.Request.WithContext(

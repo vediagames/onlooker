@@ -68,7 +68,8 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "level"
+                    "level",
+                    "create"
                 ],
                 "summary": "Creates level object",
                 "parameters": [
@@ -119,7 +120,9 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "level"
+                    "level",
+                    "event",
+                    "complete"
                 ],
                 "summary": "Logs completion of level",
                 "parameters": [
@@ -170,7 +173,9 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "level"
+                    "level",
+                    "event",
+                    "death"
                 ],
                 "summary": "Logs death of player in level",
                 "parameters": [
@@ -221,7 +226,9 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "level"
+                    "level",
+                    "grappling hook",
+                    "event"
                 ],
                 "summary": "Logs usage of grappling hook",
                 "parameters": [
@@ -240,6 +247,165 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/controller.handleEventUseGrapplingHookResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controller.httpError"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/controller.httpError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controller.httpError"
+                        }
+                    }
+                }
+            }
+        },
+        "/level/events/complete": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "level",
+                    "events",
+                    "complete"
+                ],
+                "summary": "Logs completion of level",
+                "parameters": [
+                    {
+                        "description": "Log completion",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controller.handleEventsCompleteRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controller.handleEventsCompleteResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controller.httpError"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/controller.httpError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controller.httpError"
+                        }
+                    }
+                }
+            }
+        },
+        "/level/events/death": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "level",
+                    "death",
+                    "events"
+                ],
+                "summary": "Logs death of level",
+                "parameters": [
+                    {
+                        "description": "Log death",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controller.handleEventsDeathRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controller.handleEventsDeathResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controller.httpError"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/controller.httpError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controller.httpError"
+                        }
+                    }
+                }
+            }
+        },
+        "/level/events/grappling-hook-usage": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "level",
+                    "grappling hook",
+                    "events"
+                ],
+                "summary": "Logs usage of grappling hook",
+                "parameters": [
+                    {
+                        "description": "Log grappling hook usage",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controller.handleEventsUseGrapplingHookRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controller.handleEventsUseGrapplingHookResponse"
                         }
                     },
                     "400": {
@@ -438,6 +604,72 @@ const docTemplate = `{
                 },
                 "uuid": {
                     "type": "string"
+                }
+            }
+        },
+        "controller.handleEventsCompleteRequest": {
+            "type": "object",
+            "properties": {
+                "requests": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/controller.handleEventCompleteRequest"
+                    }
+                }
+            }
+        },
+        "controller.handleEventsCompleteResponse": {
+            "type": "object",
+            "properties": {
+                "responses": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/controller.handleEventCompleteResponse"
+                    }
+                }
+            }
+        },
+        "controller.handleEventsDeathRequest": {
+            "type": "object",
+            "properties": {
+                "requests": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/controller.handleEventDeathRequest"
+                    }
+                }
+            }
+        },
+        "controller.handleEventsDeathResponse": {
+            "type": "object",
+            "properties": {
+                "responses": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/controller.handleEventDeathResponse"
+                    }
+                }
+            }
+        },
+        "controller.handleEventsUseGrapplingHookRequest": {
+            "type": "object",
+            "properties": {
+                "requests": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/controller.handleEventUseGrapplingHookRequest"
+                    }
+                }
+            }
+        },
+        "controller.handleEventsUseGrapplingHookResponse": {
+            "type": "object",
+            "properties": {
+                "responses": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/controller.handleEventUseGrapplingHookResponse"
+                    }
                 }
             }
         },
