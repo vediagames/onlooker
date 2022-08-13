@@ -206,7 +206,7 @@ func (c controller) HandleEventsComplete(ctx *gin.Context) {
 	}
 
 	res := handleEventsCompleteResponse{
-		Responses: make([]handleEventCompleteResponse, len(req.Requests)),
+		Responses: make([]handleEventCompleteResponse, 0, len(req.Requests)),
 	}
 
 	zerolog.Ctx(ctx.Request.Context()).Info().Msgf("inserting %d events", len(req.Requests))
@@ -258,7 +258,7 @@ func (c controller) HandleEventsDeath(ctx *gin.Context) {
 	}
 
 	res := handleEventsDeathResponse{
-		Responses: make([]handleEventDeathResponse, len(req.Requests)),
+		Responses: make([]handleEventDeathResponse, 0, len(req.Requests)),
 	}
 
 	zerolog.Ctx(ctx.Request.Context()).Info().Msgf("inserting %d events", len(req.Requests))
@@ -308,7 +308,7 @@ func (c controller) HandleEventsUseGrapplingHook(ctx *gin.Context) {
 	}
 
 	res := handleEventsUseGrapplingHookResponse{
-		Responses: make([]handleEventUseGrapplingHookResponse, len(req.Requests)),
+		Responses: make([]handleEventUseGrapplingHookResponse, 0, len(req.Requests)),
 	}
 
 	zerolog.Ctx(ctx.Request.Context()).Info().Msgf("inserting %d events", len(req.Requests))
